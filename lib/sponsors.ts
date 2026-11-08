@@ -1,4 +1,4 @@
-import { db, q } from "./db";
+import { db, ensureSchema, q } from "./db";
 import { normalizeCompany } from "./normalize";
 
 const PAGE_API = "https://www.gov.uk/api/content/government/publications/register-of-licensed-sponsors-workers";
@@ -34,6 +34,7 @@ export async function refreshSponsors() {
   const names = [...new Set(lines.map(firstColumn).map(normalizeCompany).filter((n) => n.length > 1))];
   if (names.length < 1000) throw new Error(`Only ${names.length} sponsors parsed, refusing to replace the list`);
 
+  await ensureSchema();
   const CHUNK = 5000;
   await db().transaction((tx) => {
     const qs = [tx`truncate uk_sponsors`];

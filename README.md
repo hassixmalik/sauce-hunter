@@ -10,7 +10,7 @@ The whole thing is one daily serverless function plus five small tables, so it s
 
 1. **Vercel**: import this repo at vercel.com/new (Next.js is auto-detected).
 2. **Database**: in the Vercel project, go to *Storage → Marketplace → Neon* and connect it. This adds `DATABASE_URL`.
-3. **Create tables**: copy `DATABASE_URL` from Vercel, then run
+3. **Tables**: created automatically on the first request. (Optional manual way: copy `DATABASE_URL` and run)
    ```bash
    DATABASE_URL="postgres://..." npm run db:init
    ```

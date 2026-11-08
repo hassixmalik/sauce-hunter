@@ -1,5 +1,5 @@
 import { DEFAULT_KEYWORDS, type KeywordSeed } from "@/config/scoring";
-import { db, q } from "./db";
+import { db, ensureSchema, q } from "./db";
 import type { Keyword } from "./types";
 
 const TYPES = ["include", "exclude", "boost"] as const;
@@ -47,6 +47,7 @@ export async function seedDefaults() {
 }
 
 export async function resetToDefaults() {
+  await ensureSchema();
   await db().transaction((tx) => [tx`delete from keywords`]);
   return seedDefaults();
 }

@@ -49,3 +49,12 @@ describe("csv", () => {
     expect(toDelimited([job], { linksOnly: true })).toBe("Link\nhttps://x.y/1");
   });
 });
+
+import { readFileSync } from "node:fs";
+import { SCHEMA_SQL, schemaStatements } from "@/lib/schema";
+describe("schema", () => {
+  it("lib/schema.ts matches db/schema.sql", () => {
+    expect(SCHEMA_SQL).toBe(readFileSync("db/schema.sql", "utf8"));
+    expect(schemaStatements()).toHaveLength(6);
+  });
+});
