@@ -1,0 +1,63 @@
+:root {
+  --bg: #f7f7f5; --card: #fff; --text: #1c1c1a; --muted: #6b6b66; --line: #e4e4df;
+  --accent: #0f766e; --accent-soft: #ccfbf1; --warn: #b45309; --warn-soft: #fef3c7;
+  --bad: #b91c1c; --ok: #15803d; --ok-soft: #dcfce7;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141413; --card: #1e1e1c; --text: #ecece8; --muted: #9a9a93; --line: #33332f;
+    --accent: #2dd4bf; --accent-soft: #134e4a; --warn: #fbbf24; --warn-soft: #422006;
+    --bad: #f87171; --ok: #4ade80; --ok-soft: #14532d;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--accent); }
+.wrap { max-width: 920px; margin: 0 auto; padding: 16px 16px 64px; }
+h1 { font-size: 22px; margin: 0; }
+h2 { font-size: 16px; margin: 0; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.between { justify-content: space-between; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin-top: 12px; }
+button, .btn, select, input[type=text], input[type=number], input[type=search] {
+  font: inherit; border: 1px solid var(--line); background: var(--card); color: var(--text);
+  border-radius: 8px; padding: 8px 12px; min-height: 40px;
+}
+button, .btn { cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+button:disabled { opacity: .5; cursor: default; }
+.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
+.ghost { background: transparent; }
+.danger { color: var(--bad); }
+input[type=number] { width: 80px; }
+input[type=search], input[type=text] { flex: 1; min-width: 140px; }
+label.check { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; }
+.badge { font-size: 12px; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.badge.new { background: var(--warn-soft); color: var(--warn); }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.plain { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+.day { width: 100%; justify-content: space-between; border: 0; padding: 4px 0; background: transparent; min-height: 44px; text-align: left; }
+.day .date { font-weight: 600; }
+.job { border-top: 1px solid var(--line); padding: 10px 0; display: grid; grid-template-columns: 44px 1fr; gap: 10px; }
+.job.done { opacity: .6; }
+.score { font-weight: 700; text-align: center; border-radius: 8px; padding: 6px 0; background: var(--accent-soft); color: var(--accent); height: fit-content; }
+.job .title { font-weight: 600; text-decoration: none; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.tag { font-size: 11px; padding: 1px 6px; border-radius: 4px; background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--text); color: var(--bg);
+  padding: 10px 16px; border-radius: 99px; font-size: 14px; z-index: 10; max-width: calc(100% - 32px); }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-top: 12px; }
+.tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; }
+.tabs button.on { border-bottom-color: var(--accent); color: var(--accent); font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 99px; padding: 2px 4px 2px 10px; font-size: 14px; background: var(--card); }
+.chip.off { opacity: .45; text-decoration: line-through; }
+.chip button { min-height: 28px; padding: 0 8px; border: 0; background: transparent; }
+.chip input { width: 56px; min-height: 28px; padding: 2px 6px; }
+pre { white-space: pre-wrap; font-size: 12px; margin: 6px 0 0; }
+@media (max-width: 560px) {
+  .actions button, .actions .btn { flex: 1 1 calc(50% - 8px); justify-content: center; }
+}
