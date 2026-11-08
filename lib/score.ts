@@ -1,5 +1,5 @@
 import {
-  MID_LEVEL_POINTS, MID_LEVEL_TERMS, NO_SPONSOR_PHRASES, NO_SPONSOR_POINTS, SENIORITY_TERMS,
+  MID_LEVEL_POINTS, MID_LEVEL_TERMS, NON_EUROPE_POINTS, NON_EUROPE_TERMS, NO_SPONSOR_PHRASES, NO_SPONSOR_POINTS, SENIORITY_TERMS,
   SPONSOR_PHRASES, SPONSOR_POINTS,
 } from "@/config/scoring";
 import type { Keyword } from "./types";
@@ -47,6 +47,12 @@ export function scoreJob(job: ScoreInput, keywords: Keyword[]): ScoreResult {
     groupsHit.add(group);
     score += k.weight;
     matched.push(k.term);
+  }
+
+  const locationBoost = active.some((k) => k.type === "boost" && k.field === "location" && k.weight > 0 && has(fields.location, k.term));
+  if (!locationBoost && hasAny(fields.location, NON_EUROPE_TERMS)) {
+    score += NON_EUROPE_POINTS;
+    matched.push("outside-europe");
   }
 
   if (hasAny(title, MID_LEVEL_TERMS) || !hasAny(title, SENIORITY_TERMS)) {

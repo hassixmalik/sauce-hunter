@@ -3,6 +3,10 @@
 
 export async function api<T = any>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, { cache: "no-store", ...init });
+  if (res.status === 401) {
+    location.href = "/login?next=" + encodeURIComponent(location.pathname);
+    throw new Error("Logged out");
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data?.error ?? `${res.status} ${res.statusText}`);
   return data as T;

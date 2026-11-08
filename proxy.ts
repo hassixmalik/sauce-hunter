@@ -1,21 +1,22 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { COOKIE, credentials, isAuthed } from "@/lib/auth";
 
-// One shared password for everything except the cron routes (they use CRON_SECRET).
-export function proxy(req: NextRequest) {
-  const user = process.env.BASIC_AUTH_USER, pass = process.env.BASIC_AUTH_PASS;
-  if (!user || !pass) {
+// Everything needs a login except the login page itself and the cron routes (they use CRON_SECRET).
+export async function proxy(req: NextRequest) {
+  const { pathname, search } = req.nextUrl;
+  if (pathname === "/login" || pathname === "/api/login") return NextResponse.next();
+
+  if (!credentials()) {
     // Fail closed in production so the page is never public by mistake.
     if (process.env.NODE_ENV === "production") return new NextResponse("Set BASIC_AUTH_USER and BASIC_AUTH_PASS", { status: 500 });
     return NextResponse.next();
   }
-  const header = req.headers.get("authorization") ?? "";
-  if (header.startsWith("Basic ")) {
-    try {
-      const [u, ...rest] = atob(header.slice(6)).split(":");
-      if (u === user && rest.join(":") === pass) return NextResponse.next();
-    } catch { /* bad header */ }
-  }
-  return new NextResponse("Auth required", { status: 401, headers: { "WWW-Authenticate": 'Basic realm="sauce-hunter"' } });
+  if (await isAuthed(req.cookies.get(COOKIE)?.value, req.headers.get("authorization"))) return NextResponse.next();
+
+  if (pathname.startsWith("/api/")) return NextResponse.json({ error: "login required" }, { status: 401 });
+  const url = new URL("/login", req.url);
+  if (pathname !== "/") url.searchParams.set("next", pathname + search);
+  return NextResponse.redirect(url);
 }
 
 export const config = {

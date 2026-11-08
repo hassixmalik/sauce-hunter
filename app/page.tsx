@@ -110,6 +110,9 @@ export default function Home() {
   }
 
   const lastRun = runs[0];
+  const lastOk = runs.find((r) => r.finished_at && !r.stats?.error);
+  const stale = batches !== null && !error && (!lastOk || Date.now() - new Date(lastOk.started_at).getTime() > 26 * 3600_000);
+  const logout = async () => { await fetch("/api/login", { method: "DELETE" }); location.href = "/login"; };
   const pending = useMemo(() => (batches ?? []).reduce((a, b) => a + b.new_count, 0), [batches]);
 
   return (
@@ -119,8 +122,11 @@ export default function Home() {
         <div className="row">
           <Link className="btn ghost" href="/keywords">Keywords</Link>
           <button onClick={() => runNow()} disabled={busy === "run"}>{busy === "run" ? "Running…" : "Run now"}</button>
+          <button className="ghost" onClick={logout} aria-label="Log out">Log out</button>
         </div>
       </div>
+
+      {stale && <div className="card warn small">⚠ No successful run in the last 26 hours. The daily cron may not be running. Check Vercel → Settings → Cron Jobs, or press Run now.</div>}
 
       <div className="card small">
         <div className="row between">

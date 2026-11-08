@@ -23,7 +23,7 @@ h2 { font-size: 16px; margin: 0; }
 .muted { color: var(--muted); }
 .small { font-size: 13px; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin-top: 12px; }
-button, .btn, select, input[type=text], input[type=number], input[type=search] {
+button, .btn, select, input[type=text], input[type=password], input[type=number], input[type=search] {
   font: inherit; border: 1px solid var(--line); background: var(--card); color: var(--text);
   border-radius: 8px; padding: 8px 12px; min-height: 40px;
 }
@@ -34,6 +34,13 @@ button:disabled { opacity: .5; cursor: default; }
 .danger { color: var(--bad); }
 input[type=number] { width: 80px; }
 input[type=search], input[type=text] { flex: 1; min-width: 140px; }
+input { font-size: 16px; } /* stops iOS zooming into inputs */
+.login { max-width: 380px; margin: 12vh auto 0; display: flex; flex-direction: column; gap: 12px; padding: 20px; }
+.login p { margin: 0; }
+.login label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.login input { width: 100%; }
+.login button { justify-content: center; }
+.warn { border-color: var(--warn); color: var(--warn); }
 label.check { display: inline-flex; gap: 6px; align-items: center; font-size: 14px; }
 .badge { font-size: 12px; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
 .badge.new { background: var(--warn-soft); color: var(--warn); }
@@ -60,4 +67,5 @@ label.check { display: inline-flex; gap: 6px; align-items: center; font-size: 14
 pre { white-space: pre-wrap; font-size: 12px; margin: 6px 0 0; }
 @media (max-width: 560px) {
   .actions button, .actions .btn { flex: 1 1 calc(50% - 8px); justify-content: center; }
+  input[type=search] { flex-basis: 100%; }
 }

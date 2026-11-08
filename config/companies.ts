@@ -6,31 +6,43 @@ export type Ats = "greenhouse" | "lever" | "ashby";
 export interface Company { name: string; ats: Ats; slug: string }
 
 export const COMPANIES: Company[] = [
-  // Greenhouse
+  // Greenhouse (slugs checked 2026-11-08)
   { name: "Anthropic", ats: "greenhouse", slug: "anthropic" },
-  { name: "Google DeepMind", ats: "greenhouse", slug: "deepmind" },
   { name: "Isomorphic Labs", ats: "greenhouse", slug: "isomorphiclabs" },
-  { name: "Wayve", ats: "greenhouse", slug: "wayve" },
   { name: "Stability AI", ats: "greenhouse", slug: "stabilityai" },
   { name: "Monzo", ats: "greenhouse", slug: "monzo" },
   { name: "GoCardless", ats: "greenhouse", slug: "gocardless" },
   { name: "Intercom", ats: "greenhouse", slug: "intercom" },
   { name: "Helsing", ats: "greenhouse", slug: "helsing" },
+  { name: "Cleo", ats: "greenhouse", slug: "cleo" },
+  { name: "PolyAI", ats: "greenhouse", slug: "polyai" },
+  { name: "Wise", ats: "greenhouse", slug: "wise" },
+  { name: "Deliveroo", ats: "greenhouse", slug: "deliveroo" },
   // Lever
-  { name: "Mistral AI", ats: "lever", slug: "mistral" },
-  { name: "Tractable", ats: "lever", slug: "tractable" },
-  { name: "Cleo", ats: "lever", slug: "cleo" },
+  { name: "Pigment", ats: "lever", slug: "pigment" },
   // Ashby
   { name: "Synthesia", ats: "ashby", slug: "synthesia" },
   { name: "ElevenLabs", ats: "ashby", slug: "elevenlabs" },
   { name: "Cohere", ats: "ashby", slug: "cohere" },
-  { name: "PolyAI", ats: "ashby", slug: "polyai" },
+  { name: "Wayve", ats: "ashby", slug: "wayve" },
+  { name: "Tractable", ats: "ashby", slug: "tractable" },
+  { name: "Faculty", ats: "ashby", slug: "faculty" },
+  { name: "Quantexa", ats: "ashby", slug: "quantexa" },
+  { name: "Causaly", ats: "ashby", slug: "causaly" },
+  { name: "Multiverse", ats: "ashby", slug: "multiverse" },
   { name: "n8n", ats: "ashby", slug: "n8n" },
   { name: "Langfuse", ats: "ashby", slug: "langfuse" },
   { name: "Lovable", ats: "ashby", slug: "lovable" },
   { name: "Poolside", ats: "ashby", slug: "poolside" },
   { name: "Legora", ats: "ashby", slug: "legora" },
   { name: "Granola", ats: "ashby", slug: "granola" },
+  { name: "Parloa", ats: "ashby", slug: "parloa" },
+  { name: "DeepL", ats: "ashby", slug: "deepl" },
+  { name: "Photoroom", ats: "ashby", slug: "photoroom" },
+  { name: "Dust", ats: "ashby", slug: "dust" },
+  { name: "Harvey", ats: "ashby", slug: "harvey" },
+  { name: "Perplexity", ats: "ashby", slug: "perplexity" },
+  { name: "OpenAI", ats: "ashby", slug: "openai" },
 ];
 
 /** Company boards list every open role, so only take ones posted in the last N days. */

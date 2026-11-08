@@ -64,3 +64,11 @@ export const NO_SPONSOR_PHRASES = [
   "must have right to work", "must have the right to work", "without sponsorship",
   "sponsorship is not available", "sponsorship not available",
 ];
+
+/** Penalty when the location is outside Europe AND no positive location boost matched (mixed "London / NYC" is fine). */
+export const NON_EUROPE_POINTS = -30;
+export const NON_EUROPE_TERMS = [
+  "united states", "usa", "us", "u.s.", "san francisco", "new york", "new york city", "nyc", "seattle", "boston",
+  "austin", "los angeles", "chicago", "denver", "canada", "toronto", "vancouver", "montreal", "ca", "ny",
+  "india", "bangalore", "bengaluru", "singapore", "tokyo", "sydney", "australia", "brazil", "mexico",
+];

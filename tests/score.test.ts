@@ -48,6 +48,10 @@ describe("scoreJob", () => {
     expect(withSponsor - base).toBe(15);
     expect(base).toBeGreaterThanOrEqual(SCORE_THRESHOLD - 5);
   });
+  it("penalises US-only locations but not mixed ones", () => {
+    expect(scoreJob({ title: "AI Engineer", location: "San Francisco, CA" }, KW).score).toBe(0);
+    expect(scoreJob({ title: "AI Engineer", location: "London / New York" }, KW).score).toBe(40);
+  });
   it("ignores inactive keywords", () => {
     const kw = KW.map((k) => (k.term === "staff" ? { ...k, active: false } : k));
     expect(scoreJob({ title: "Staff Software Engineer" }, kw).keep).toBe(true);

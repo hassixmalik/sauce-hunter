@@ -14,11 +14,16 @@ export function db() {
   return client;
 }
 
-/** Creates the tables if missing (all statements are "if not exists"). Runs once per server instance. */
+/**
+ * Creates the tables if missing. Runs once per server instance.
+ * An advisory lock stops two cold starts racing each other on "create table".
+ */
 export function ensureSchema() {
-  ready ??= db()
-    .transaction((tx) => schemaStatements().map((s) => tx.query(s)))
-    .catch((e) => { ready = null; throw e; });
+  ready ??= (async () => {
+    const [r] = (await db().query(`select to_regclass('public.uk_sponsors') is not null as ok`)) as { ok: boolean }[];
+    if (r?.ok) return;
+    await db().transaction((tx) => [tx`select pg_advisory_xact_lock(727274)`, ...schemaStatements().map((s) => tx.query(s))]);
+  })().catch((e) => { ready = null; throw e; });
   return ready;
 }
 
