@@ -52,6 +52,10 @@ describe("scoreJob", () => {
     expect(scoreJob({ title: "AI Engineer", location: "San Francisco, CA" }, KW).score).toBe(0);
     expect(scoreJob({ title: "AI Engineer", location: "London / New York" }, KW).score).toBe(40);
   });
+  it("include phrase beats a shorter exclude word", () => {
+    expect(scoreJob({ title: "Member of Technical Staff (AI Engineer)" }, KW).keep).toBe(true);
+    expect(scoreJob({ title: "Staff Software Engineer" }, KW).keep).toBe(false);
+  });
   it("ignores inactive keywords", () => {
     const kw = KW.map((k) => (k.term === "staff" ? { ...k, active: false } : k));
     expect(scoreJob({ title: "Staff Software Engineer" }, kw).keep).toBe(true);

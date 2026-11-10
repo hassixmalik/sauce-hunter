@@ -70,6 +70,7 @@ curl -H "Authorization: Bearer $CRON_SECRET" https://<app>/api/cron/fetch
     (so "Applied AI / ML Engineer" gets +25, not +75).
   - Fixed rules (in `config/scoring.ts`): +5 for mid-level/no seniority word, +15 for UK sponsor register or "visa sponsorship" text, −30 for "no sponsorship"/"must have right to work".
 - **Companies**: `config/companies.ts` (Greenhouse / Lever / Ashby slugs). A wrong slug only shows as an error in Run details.
+- **New default keywords** (after editing `config/scoring.ts`): `curl -H "Authorization: Bearer $CRON_SECRET" https://<app>/api/cron/keywords` adds the missing ones and keeps your edits. Note: it also re-adds any default you deleted, so turn those off (◉) instead of deleting.
 - **Searches**: `config/searches.ts` (Adzuna countries + queries, Reed queries + locations, Arbeitnow on/off).
 
 ## Notes

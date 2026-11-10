@@ -34,7 +34,9 @@ export function scoreJob(job: ScoreInput, keywords: Keyword[]): ScoreResult {
   const includes = active.filter((k) => k.type === "include");
   if (includes.length && !includes.some((k) => has(title, k.term))) return { keep: false, reason: "no-include", score: 0, matched: [] };
 
-  const ex = active.find((k) => k.type === "exclude" && has(fields[k.field], k.term));
+  // An include phrase that contains the exclude word wins ("member of technical staff" vs "staff").
+  const ex = active.find((k) => k.type === "exclude" && has(fields[k.field], k.term) &&
+    !includes.some((i) => i.term !== k.term && has(i.term, k.term) && has(title, i.term)));
   if (ex) return { keep: false, reason: "excluded", score: 0, matched: [`-${ex.term}`] };
 
   let score = 0;
