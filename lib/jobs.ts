@@ -51,8 +51,14 @@ export async function markCopied(date: string, ids?: number[]) {
   return { date, marked: rows.length };
 }
 
-export async function unmarkCopied(date: string) {
-  const rows = await q(`update jobs set copied_at = null where batch_date = $1::date and copied_at is not null returning id`, [date]);
-  await q(`update batches set copied_at = null where batch_date = $1::date`, [date]);
+/** Un-marks a whole day, or only the given job ids. */
+export async function unmarkCopied(date: string, ids?: number[]) {
+  const rows = await q(
+    `update jobs set copied_at = null
+     where batch_date = $1::date and copied_at is not null ${ids?.length ? "and id = any($2::bigint[])" : ""}
+     returning id`,
+    ids?.length ? [date, ids] : [date],
+  );
+  if (!ids?.length) await q(`update batches set copied_at = null where batch_date = $1::date`, [date]);
   return { date, unmarked: rows.length };
 }

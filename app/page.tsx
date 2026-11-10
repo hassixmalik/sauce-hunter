@@ -88,6 +88,23 @@ export default function Home() {
     } catch (e: any) { setError(e.message); } finally { setBusy(""); }
   }
 
+  /** One row: mark/unmark right away on screen, then save. */
+  async function setRowCopied(j: JobRow, copied: boolean) {
+    const stamp = copied ? new Date().toISOString() : null;
+    setJobs((all) => ({ ...all, [j.batch_date]: (all[j.batch_date] ?? []).map((x) => (x.id === j.id ? { ...x, copied_at: stamp } : x)) }));
+    try {
+      await postJson(`/api/batches/${j.batch_date}/copied`, { ids: [j.id] }, copied ? "POST" : "DELETE");
+      await refresh();
+    } catch (e: any) { setError(e.message); loadDay(j.batch_date).catch(() => {}); }
+  }
+
+  async function copyRow(j: JobRow) {
+    const text = prefs.linksOnly ? j.url : toDelimited([j], { delim: "\t", header: false });
+    if (!(await copyText(text))) return flash("Copy failed");
+    flash(prefs.linksOnly ? "Link copied ✓" : "Row copied ✓");
+    if (!j.copied_at) await setRowCopied(j, true);
+  }
+
   async function undo(date: string) {
     setBusy(date);
     try {
@@ -185,7 +202,9 @@ export default function Home() {
                 </div>
                 {!jobs[b.batch_date] && <p className="muted small">Loading…</p>}
                 {jobs[b.batch_date] && list.length === 0 && <p className="muted small">No jobs match your filters.</p>}
-                {list.map((j) => <JobItem key={j.id} j={j} />)}
+                {list.map((j) => (
+                  <JobItem key={j.id} j={j} linksOnly={prefs.linksOnly} onCopy={() => copyRow(j)} onToggle={(v) => setRowCopied(j, v)} />
+                ))}
               </>
             )}
           </section>
@@ -197,7 +216,7 @@ export default function Home() {
   );
 }
 
-function JobItem({ j }: { j: JobRow }) {
+function JobItem({ j, linksOnly, onCopy, onToggle }: { j: JobRow; linksOnly: boolean; onCopy: () => void; onToggle: (copied: boolean) => void }) {
   return (
     <div className={`job${j.copied_at ? " done" : ""}`}>
       <div className="score">{j.score}</div>
@@ -211,6 +230,12 @@ function JobItem({ j }: { j: JobRow }) {
           {j.sponsor_uk === false && <span className="badge plain">not on register</span>}
           <span className="tag">{j.source}</span>
           {j.matched_keywords?.map((k) => <span className="tag" key={k}>{k}</span>)}
+        </div>
+        <div className="row-actions">
+          <button className="small" onClick={onCopy}>{linksOnly ? "Copy link" : "Copy row"}</button>
+          <label className="check small">
+            <input type="checkbox" checked={!!j.copied_at} onChange={(e) => onToggle(e.target.checked)} /> Copied
+          </label>
         </div>
       </div>
     </div>
