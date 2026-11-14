@@ -66,7 +66,10 @@ export function guessCountry(job: Pick<RawJob, "country" | "location">): string 
   return job.location && UK_HINTS.test(job.location) ? "gb" : null;
 }
 
-/** Calendar day in Bahrain, YYYY-MM-DD. */
-export function bahrainDate(d = new Date()): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bahrain" }).format(d);
+/** IANA time zone that decides which calendar day a job belongs to. Set TIMEZONE (default UTC). */
+export const TIMEZONE = process.env.TIMEZONE || "UTC";
+
+/** Calendar day in TIMEZONE, YYYY-MM-DD. */
+export function localDate(d = new Date(), timeZone = TIMEZONE): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone }).format(d);
 }

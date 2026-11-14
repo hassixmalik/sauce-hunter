@@ -171,7 +171,7 @@ export default function Home() {
 
       {error && <div className="card danger small">Error: {error}</div>}
       {batches === null && <p className="muted">Loading…</p>}
-      {batches?.length === 0 && !error && <p className="muted">No jobs yet. Press <b>Run now</b> or wait for the daily run (6 AM Bahrain).</p>}
+      {batches?.length === 0 && !error && <p className="muted">No jobs yet. Press <b>Run now</b> or wait for the daily run (03:00 UTC).</p>}
 
       {batches?.map((b) => {
         const isOpen = open === b.batch_date;
