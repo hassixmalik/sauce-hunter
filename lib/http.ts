@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { bahrainDate } from "./normalize";
+import { localDate } from "./normalize";
 
 export const json = (data: unknown, status = 200) => NextResponse.json(data, { status });
 
@@ -12,7 +12,7 @@ export function isDate(s: string | null | undefined): s is string {
   return !!s && /^\d{4}-\d{2}-\d{2}$/.test(s);
 }
 
-export const today = () => bahrainDate();
+export const today = () => localDate();
 
 /** Cron routes: Vercel sends `Authorization: Bearer $CRON_SECRET`. */
 export function cronAuthorized(req: Request) {

@@ -1,7 +1,7 @@
 import { SCORE_THRESHOLD } from "@/config/scoring";
 import { q } from "./db";
 import { loadKeywords } from "./keywords";
-import { bahrainDate, cleanUrl, dedupeKey, guessCountry, normalizeCompany } from "./normalize";
+import { localDate, cleanUrl, dedupeKey, guessCountry, normalizeCompany } from "./normalize";
 import { scoreJob } from "./score";
 import { fetchAdzuna } from "./sources/adzuna";
 import { fetchArbeitnow } from "./sources/arbeitnow";
@@ -25,7 +25,7 @@ async function collect(): Promise<Record<string, { jobs: RawJob[]; errors: strin
 /** The daily job: fetch -> filter/score -> insert -> update batch -> log run. */
 export async function runFetch() {
   const [{ id: runId }] = await q<{ id: number }>(`insert into runs default values returning id::int`);
-  const batchDate = bahrainDate();
+  const batchDate = localDate();
   const stats: Record<string, SourceStat> = {};
   try {
     const [bySource, keywords] = await Promise.all([collect(), loadKeywords()]);

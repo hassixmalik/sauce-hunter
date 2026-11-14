@@ -48,7 +48,7 @@ export const fmtTime = (s: string | null) =>
   s ? new Date(s).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
 
 export const fmtDay = (d: string) => {
-  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Bahrain" }).format(new Date());
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: process.env.TIMEZONE || "UTC" }).format(new Date());
   const label = new Date(d + "T12:00:00Z").toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
   return d === today ? `Today · ${label}` : label;
 };

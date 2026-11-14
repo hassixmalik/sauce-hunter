@@ -1,14 +1,36 @@
-# Sauce Hunter — daily job radar
+# Sauce Hunter
 
-Runs once a day on Vercel, pulls new jobs from public job APIs, scores them against your keywords, stores each job
+**A daily job radar you host yourself, for free.**
+
+<p>
+  <a href="https://zippedsauce.dev/projects/sauce-hunter/?ref=sauce-hunter"><strong>Project page</strong></a> ·
+  <a href="#setup-once">Run your own</a> ·
+  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fhassixmalik%2Fsauce-hunter&env=CRON_SECRET,BASIC_AUTH_USER,BASIC_AUTH_PASS,TIMEZONE&envDescription=Login%2C%20cron%20secret%20and%20your%20time%20zone.%20See%20.env.example&envLink=https%3A%2F%2Fgithub.com%2Fhassixmalik%2Fsauce-hunter%2Fblob%2FHEAD%2F.env.example&project-name=sauce-hunter">Deploy to Vercel</a>
+</p>
+
+![The dashboard listing a day's scored jobs](./docs/demo.gif)
+
+Once a day it pulls new jobs from public job APIs, keeps the ones that match your keywords, scores them, stores each job
 once (Neon Postgres) and shows them grouped by day. Each day has a **Copy as CSV** button (tab-separated, so it pastes
 straight into Google Sheets columns) and is then marked **Copied ✓**, so you never paste the same jobs twice.
 
+> **Not a service.** There is no sign-up and nothing to subscribe to. You deploy your own copy, with your own keywords
+> and your own database. Your login, keys and data live in your Vercel project, never in this repo.
+
 The whole thing is one daily serverless function plus five small tables, so it stays inside the free tiers (Vercel Hobby + Neon free).
+It works with **no API keys at all**: Arbeitnow and the Greenhouse / Lever / Ashby company boards are public. Adzuna and Reed are optional extras.
+
+## Features
+
+- Daily fetch from Arbeitnow, Greenhouse, Lever and Ashby boards (plus Adzuna and Reed with free keys).
+- Keyword scoring you edit in the browser: include, exclude and weighted boost terms, CSV import and export.
+- UK visa sponsor flag, checked against the government's licensed sponsor register.
+- Each job stored once across sources and days, grouped by the day it was found.
+- Copy a day as CSV for your sheet, phone friendly, installable as an app.
 
 ## Setup (once)
 
-1. **Vercel**: import this repo at vercel.com/new (Next.js is auto-detected).
+1. **Vercel**: fork this repo and import it at vercel.com/new (Next.js is auto-detected), or use the **Deploy to Vercel** link above.
 2. **Database**: in the Vercel project, go to *Storage → Marketplace → Neon* and connect it. This adds `DATABASE_URL`.
 3. **Tables**: created automatically on the first request. (Optional manual way: copy `DATABASE_URL` and run)
    ```bash
@@ -16,13 +38,14 @@ The whole thing is one daily serverless function plus five small tables, so it s
    ```
    (or paste `db/schema.sql` into the Neon SQL editor).
 4. **Env vars** (Project → Settings → Environment Variables), see `.env.example`:
+   - `TIMEZONE`: your IANA time zone, e.g. `Europe/London`. It decides which day a job belongs to. Default `UTC`.
    - `CRON_SECRET`: any long random string. Vercel sends it to the cron routes automatically.
    - `BASIC_AUTH_USER` / `BASIC_AUTH_PASS`: the login for the site. **Required**; the site returns 500 without them in production.
    - `ADZUNA_APP_ID` / `ADZUNA_APP_KEY` (free at developer.adzuna.com), `REED_API_KEY` (free at reed.co.uk/developers).
      Optional: without them those sources are skipped and the company boards still run.
 5. Redeploy. Open the site, log in, then press **Run now**. Open **Run details** → **Refresh sponsors** once to load the UK sponsor register.
 
-Crons (`vercel.json`): jobs daily at 03:00 UTC (6 AM Bahrain), sponsor register every Monday at 02:00 UTC.
+Crons (`vercel.json`): jobs daily at 03:00 UTC, sponsor register every Monday at 02:00 UTC. Change the times there.
 
 ## Daily use (phone friendly)
 
@@ -76,7 +99,7 @@ curl -H "Authorization: Bearer $CRON_SECRET" https://<app>/api/cron/fetch
 ## Notes
 
 - Dedupe: URLs are cleaned of tracking params, and `url` and `dedupe_key` (company|title|location) are both unique, so a job is stored once across sources and days.
-- `batch_date` uses the Asia/Bahrain calendar day.
+- `batch_date` uses the calendar day in `TIMEZONE`.
 - Non-UK jobs have `sponsor_uk = null`; UK jobs are `true`/`false` once the register is loaded.
 - No scraping of LinkedIn/Indeed/Glassdoor; only official/public APIs.
 
@@ -93,3 +116,14 @@ npm test
 ```bash
 cp .env.example .env.local && npm run dev
 ```
+
+## License
+
+MIT. See [LICENSE](./LICENSE).
+
+---
+
+<p align="center">
+  <a href="https://zippedsauce.dev/?ref=sauce-hunter"><img src="https://zippedsauce.dev/badges/made-by-zippedsauce.svg" alt="made by zippedsauce" height="28"></a><br>
+  <sub>Made by <a href="https://zippedsauce.dev/?ref=sauce-hunter">zippedsauce</a> · small, free tools · <a href="https://zippedsauce.dev/#catalog">more tools</a></sub>
+</p>

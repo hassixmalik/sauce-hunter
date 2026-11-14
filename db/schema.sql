@@ -9,7 +9,7 @@ create table if not exists jobs (
   location         text,
   source           text not null,             -- adzuna | reed | greenhouse | lever | ashby | arbeitnow
   posted_at        timestamptz,
-  batch_date       date not null,             -- day the job was found (Asia/Bahrain)
+  batch_date       date not null,             -- day the job was found (TIMEZONE env)
   score            int not null,
   matched_keywords text[] default '{}',
   sponsor_uk       boolean,

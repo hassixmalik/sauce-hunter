@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { toDelimited } from "@/lib/csv";
-import { bahrainDate, cleanUrl, dedupeKey, guessCountry, normalizeCompany, plainText } from "@/lib/normalize";
+import { localDate, cleanUrl, dedupeKey, guessCountry, normalizeCompany, plainText } from "@/lib/normalize";
 
 describe("cleanUrl", () => {
   it("strips tracking params, hash and trailing slash", () => {
@@ -33,9 +33,10 @@ describe("misc", () => {
     expect(guessCountry({ location: "Berlin" })).toBeNull();
     expect(guessCountry({ country: "NL", location: "Amsterdam" })).toBe("nl");
   });
-  it("bahrainDate rolls over at 21:00 UTC", () => {
-    expect(bahrainDate(new Date("2026-01-01T20:59:00Z"))).toBe("2026-01-01");
-    expect(bahrainDate(new Date("2026-01-01T21:00:00Z"))).toBe("2026-01-02");
+  it("localDate rolls over at local midnight", () => {
+    expect(localDate(new Date("2026-01-01T20:59:00Z"), "Asia/Bahrain")).toBe("2026-01-01");
+    expect(localDate(new Date("2026-01-01T21:00:00Z"), "Asia/Bahrain")).toBe("2026-01-02");
+    expect(localDate(new Date("2026-01-01T23:59:00Z"), "UTC")).toBe("2026-01-01");
   });
 });
 
